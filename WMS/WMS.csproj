@@ -67,6 +67,13 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config" />
+    <Content Include="DotNet\proxy.ashx" />
+    <Content Include="DotNet\proxy.config" />
+    <None Include="DotNet\proxy.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <Content Include="DotNet\README.md" />
+    <Content Include="DotNet\Web.config" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
