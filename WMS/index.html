@@ -1,0 +1,60 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no">
+    <title>Labeling features client-side</title>
+    <link rel="stylesheet" href="https://js.arcgis.com/3.21/esri/css/esri.css">
+    <style>
+        html, body, #map {
+            height: 100%;
+            width: 100%;
+            margin: 0;
+            padding: 0;
+        }
+    </style>
+
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+            integrity="sha256-3edrmyuQ0w65f8gfBsqowzjJe2iM6n0nKciPUp8y+7E="
+            crossorigin="anonymous"></script>
+    <script src="https://js.arcgis.com/3.21/"></script>
+    <script>
+        require([
+        "esri/config",
+        "esri/urlUtils",
+        "esri/map",
+        "esri/layers/WMSLayer",
+        "esri/geometry/Extent"
+        ],
+ function (esriConfig, urlUtils, Map, WMSLayer, Extent) {
+     esriConfig.defaults.io.corsEnabledServers.push("geo.weather.gc.ca")
+     urlUtils.addProxyRule({
+         urlPrefix: "geo.weather.gc.ca",
+         proxyUrl: "http://localhost/DotNet/proxy.ashx"
+     });
+     var layer = new WMSLayer("http://geo.weather.gc.ca/geomet//?request=GetMap&service=WMS&version=1.1.1&srs=EPSG:4326&bbox=-60,46,-50,52&format=image/png&styles=WINDARROW&layers=[GDPS.ETA_UU]&width=&height=");
+     var extent = new Extent({
+         "xmin": -60,
+         "xmax": -50,
+         "ymin": 46,
+         "ymax": 52,
+         "spatialReference": { "wkid": 4326 }
+     });
+     var map = new Map("map", {
+         extent: extent,
+         basemap: "topo"
+     });
+     layer.setVisibleLayers(['GDPS.ETA_UU']);
+     layer.setOpacity(0.3);
+     map.addLayer(layer);
+     $('#legendImg').attr('src', 'http://geo.weather.gc.ca/geomet//?LANG=E%26SERVICE=WMS%26VERSION=1.1.1%26REQUEST=GetLegendGraphic%26STYLE=WINDSPEED%26LAYER=GDPS.ETA_UU%26format=image/png&opacity=0.5');
+
+ });
+    </script>
+</head>
+<body oncontextmenu="return false;">
+    <div id="map">
+        <img id="legendImg" style="position: absolute; right: 0; bottom: 40px; z-index:1" />
+    </div>
+</body>
+</html>
