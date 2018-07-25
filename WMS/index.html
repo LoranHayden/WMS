@@ -32,7 +32,7 @@
          urlPrefix: "geo.weather.gc.ca",
          proxyUrl: "http://localhost/DotNet/proxy.ashx"
      });
-     var layer = new WMSLayer("http://geo.weather.gc.ca/geomet//?request=GetMap&service=WMS&version=1.1.1&srs=EPSG:4326&bbox=-60,46,-50,52&format=image/png&styles=WINDARROW&layers=[GDPS.ETA_UU]&width=&height=");
+     var layer = new WMSLayer("http://geo.weather.gc.ca/geomet//?request=GetMap&service=WMS&version=1.3.0&bbox=-60,46,-50,52&format=image/png&styles=WINDARROW&layers=GDPS.ETA_UU&width=800&height=800&CRS=EPSG:4326");
      var extent = new Extent({
          "xmin": -60,
          "xmax": -50,
@@ -45,10 +45,9 @@
          basemap: "topo"
      });
      layer.setVisibleLayers(['GDPS.ETA_UU']);
-     layer.setOpacity(0.3);
+     layer.setOpacity(0.7);
      map.addLayer(layer);
-     $('#legendImg').attr('src', 'http://geo.weather.gc.ca/geomet//?LANG=E%26SERVICE=WMS%26VERSION=1.1.1%26REQUEST=GetLegendGraphic%26STYLE=WINDSPEED%26LAYER=GDPS.ETA_UU%26format=image/png');
-
+     $('#legendImg').attr('src', 'http://geo.weather.gc.ca/geomet?version=1.3.0&service=WMS&request=GetLegendGraphic&sld_version=1.1.0&layer=GDPS.PRES_UU.150.3h&format=image/png&STYLE=WINDARROW');
  });
     </script>
 </head>
