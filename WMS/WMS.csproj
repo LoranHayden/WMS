@@ -66,6 +66,7 @@
     <Reference Include="System.EnterpriseServices" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="images\animated_loading.gif" />
     <Content Include="packages.config" />
     <Content Include="DotNet\proxy.ashx" />
     <Content Include="DotNet\proxy.config" />
