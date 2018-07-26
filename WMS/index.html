@@ -22,6 +22,7 @@
         require([
         "esri/config",
         "esri/urlUtils",
+        "esri/domUtils",
         "esri/map",
         "esri/layers/WMSLayer",
         "esri/geometry/Extent",
@@ -30,50 +31,40 @@
          "dojo/ready",
          "dojo/domReady!"
         ],
- function (esriConfig, urlUtils, Map, WMSLayer, Extent, on, dom) {
+ function (esriConfig, urlUtils, domUtils, Map, WMSLayer, Extent, on, dom) {
+     let opacity = 0.7;
      esriConfig.defaults.io.corsEnabledServers.push("geo.weather.gc.ca")
      urlUtils.addProxyRule({
          urlPrefix: "geo.weather.gc.ca",
          proxyUrl: "http://localhost/DotNet/proxy.ashx"
      });
-     var layer = new WMSLayer("http://geo.weather.gc.ca/geomet?request=GetMap&service=WMS&version=1.3.0&bbox=-60,46,-50,52&format=image/png&styles=WINDARROW&layers=GDPS.ETA_UU&width=800&height=800&CRS=EPSG:4326");
-     var extent = new Extent({
+     let layer = new WMSLayer("http://geo.weather.gc.ca/geomet?request=GetMap&service=WMS&version=1.3.0&bbox=-60,46,-50,52&format=image/png&styles=WINDARROW&layers=GDPS.ETA_UU&width=800&height=800&CRS=EPSG:4326");
+     let extent = new Extent({
          "xmin": -60,
          "xmax": -50,
          "ymin": 46,
          "ymax": 52,
          "spatialReference": { "wkid": 4326 }
      });
-     var map = new Map("map", {
+     let map = new Map("map", {
          extent: extent,
          basemap: "topo",
          logo: false
      });
-     loading = dom.byId("loadingImg");
-
-     function showLoading() {
-         esri.show(loading);
-         map.disableMapNavigation();
-         map.hideZoomSlider();
-     }
-
-     function hideLoading() {
-         esri.hide(loading);
-         $('#legendImg').attr('src', 'http://geo.weather.gc.ca/geomet?version=1.3.0&service=WMS&request=GetLegendGraphic&sld_version=1.1.0&layer=GDPS.PRES_UU.150.3h&format=image/png&STYLE=WINDARROW');
-         map.enableMapNavigation();
-         map.showZoomSlider();
-     }
 
      // hide the busy indicator once the wms layer is added
+     // and load the legend
      map.on("layer-add-result", function (evt) {
-         if (evt.layer.id === layer.id)
-             hideLoading();
+         if (evt.layer.id === layer.id) {
+             domUtils.hide(dom.byId("loadingImg"));
+             $('#legendImg').attr('src', 'http://geo.weather.gc.ca/geomet?version=1.3.0&service=WMS&request=GetLegendGraphic&sld_version=1.1.0&layer=GDPS.PRES_UU.150.3h&format=image/png&STYLE=WINDARROW');
+             $('#legendImg').css('opacity', opacity);
+         }
      });
 
      layer.setVisibleLayers(['GDPS.ETA_UU']);
-     layer.setOpacity(0.7);
+     layer.setOpacity(opacity);
      map.addLayer(layer);
-
  });
     </script>
 </head>
