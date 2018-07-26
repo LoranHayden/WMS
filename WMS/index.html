@@ -22,6 +22,7 @@
         require([
         "esri/config",
         "esri/urlUtils",
+        "esri/domUtils",
         "esri/map",
         "esri/layers/WMSLayer",
         "esri/geometry/Extent",
@@ -30,7 +31,8 @@
          "dojo/ready",
          "dojo/domReady!"
         ],
- function (esriConfig, urlUtils, Map, WMSLayer, Extent, on, dom) {
+ function (esriConfig, urlUtils, domUtils, Map, WMSLayer, Extent, on, dom) {
+     let opacity = 0.7;
      esriConfig.defaults.io.corsEnabledServers.push("geo.weather.gc.ca")
      urlUtils.addProxyRule({
          urlPrefix: "geo.weather.gc.ca",
@@ -51,17 +53,10 @@
      });
      loading = dom.byId("loadingImg");
 
-     function showLoading() {
-         esri.show(loading);
-         map.disableMapNavigation();
-         map.hideZoomSlider();
-     }
-
      function hideLoading() {
-         esri.hide(loading);
+         domUtils.hide(loading); 
          $('#legendImg').attr('src', 'http://geo.weather.gc.ca/geomet?version=1.3.0&service=WMS&request=GetLegendGraphic&sld_version=1.1.0&layer=GDPS.PRES_UU.150.3h&format=image/png&STYLE=WINDARROW');
-         map.enableMapNavigation();
-         map.showZoomSlider();
+         $('#legendImg').css('opacity', opacity);
      }
 
      // hide the busy indicator once the wms layer is added
@@ -71,7 +66,7 @@
      });
 
      layer.setVisibleLayers(['GDPS.ETA_UU']);
-     layer.setOpacity(0.7);
+     layer.setOpacity(opacity);
      map.addLayer(layer);
 
  });
